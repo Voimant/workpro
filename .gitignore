@@ -1,0 +1,5 @@
+venv
+.idea
+clients.csv
+EHO.db
+/__pycache__

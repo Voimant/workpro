@@ -1,0 +1,7 @@
+ссылка на qr
+http://qrcoder.ru/code/?http%3A%2F%2Ft.me%2FTestoResto_bot&4&0
+
+
+для блогов
+
+<a href="http://qrcoder.ru" target="_blank"><img src="http://qrcoder.ru/code/?http%3A%2F%2Ft.me%2FTestoResto_bot&4&0" width="132" height="132" border="0" title="QR код"></a>
