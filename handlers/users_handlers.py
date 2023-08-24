@@ -105,7 +105,7 @@ async def review(call):
     await bot.send_message(call.from_user.id, otziv, reply_markup=markup3)
 
 async def main_menu(call):
-    logo = 'media\\images\\main_theme.jpg'
+    logo = 'media//images//main_theme.jpg'
     with open(logo, 'rb') as f:
         await bot.send_photo(call.from_user.id, f, start_t,  reply_markup=markup)
 
