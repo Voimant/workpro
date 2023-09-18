@@ -1,5 +1,6 @@
 from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from sourse.get_crm import car_for_testdrive
 
 main_menu_kb_1 = InlineKeyboardButton('📎Запись на тест-драйв📎', callback_data='button1')
 # kbd_1 = InlineKeyboardMarkup().add(inline_btn_1)
@@ -28,6 +29,7 @@ markup4.add(send_kb_1, send_kb_2)
 #объединение клавиатур row_width=2
 markup = InlineKeyboardMarkup()
 markup.add(main_menu_kb_9)
+markup.add(main_menu_kb_1)
 markup.add(main_menu_kb_7)
 markup.add(main_menu_kb_8)
 markup.add(main_menu_kb_2)
@@ -50,10 +52,24 @@ contacts_kb_2 = InlineKeyboardButton('Отдел продаж GEELY', url='https
 contacts_kb_3 = InlineKeyboardButton('Поддержка GEELY', url='https://t.me/elvirasibatova')
 markup5 = InlineKeyboardMarkup()
 markup5.add(contacts_kb_2, contacts_kb_1)
-markup5.add(contacts_kb_3,reviews_kb_3)
+markup5.add(contacts_kb_3, reviews_kb_3)
 
 cont_serv_kb_1 = InlineKeyboardButton('Специалист 1', url='https://t.me/echo_geely')
 cont_serv_kb_2 = InlineKeyboardButton('Специалист 2', url='https://t.me/Valeradaich')
 markup6 = InlineKeyboardMarkup()
-markup6.add(cont_serv_kb_1,cont_serv_kb_2)
+markup6.add(cont_serv_kb_1, cont_serv_kb_2)
 markup6.add(reviews_kb_3)
+
+"""**********************ТЕСТДРАЙВЫ****************************"""
+
+def test_markup():
+    testdrive_markup = InlineKeyboardMarkup()
+    cars = car_for_testdrive()
+    for car_dicts in cars:
+        for key, value in car_dicts.items():
+            testdrive_markup.insert(InlineKeyboardButton(key, callback_data=key))
+
+            # print(key)
+    testdrive_markup.insert(reviews_kb_3)
+    return testdrive_markup
+test_markup()

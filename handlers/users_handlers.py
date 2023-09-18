@@ -2,9 +2,10 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
-from keyboards import markup, markup2, markup3, markup4, markup5, markup6
+from keyboards import markup, markup2, markup3, markup4, markup5, markup6, test_markup
 from pprint import pprint
 from sourse.get_1C import get_request_1C
+from sourse.get_crm import car_for_testdrive, create_work_list, create_lead
 from sourse.get_func import get_test_re
 from media.texts.texts import contacts, start_t, otziv
 import re
@@ -19,6 +20,13 @@ class Fsm1(StatesGroup):
     message_all = State()
     image_al = State()
     resl = State()
+
+class Fsm_test(StatesGroup):
+    car = State()
+    name = State()
+    phone = State()
+
+
 
 #Хендлеры
 #@dp.message_handler(commands=['start1'])
@@ -164,10 +172,51 @@ async def upload_csv(call):
     await bot.send_document(call.from_user.id, doc)
     await bot.send_message(call.from_user.id, 'файл отправлен', reply_markup=markup)
 
+async def testdrive(call):
+    await bot.send_message(call.from_user.id, 'Выберете машину     ', reply_markup=test_markup())
+    await Fsm_test.car.set()
+
+async def name_1(callback: types.CallbackQuery, state:FSMContext):
+    print(callback.data)
+    await bot.send_message(callback.from_user.id, callback.data)
+    await state.update_data(car=callback.data)
+    await bot.send_message(callback.from_user.id, 'Введите ваше имя')
+    await Fsm_test.name.set()
+
+async def phone_1(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await bot.send_message(message.chat.id, 'Введите номер телефона без дополнительных знаков 89921111222')
+    await Fsm_test.phone.set()
+
+async def all_info(message: types.Message, state: FSMContext):
+    await state.update_data(phone=message.text)
+    data = await state.get_data(state)
+    cars = car_for_testdrive()
+    for car in cars:
+        for key, value in car.items():
+            if key == data['car']:
+                # create_work_list(value['brand_id'], value['model_id'])
+                resp = create_lead(data['name'], data['phone'], value['brand_id'], value['model_id'])
+                if resp['success'] == False:
+                    await bot.send_message(message.chat.id, 'Номер введен неверно. Попробуйте еще раз', reply_markup=markup)
+                else:
+                    await bot.send_message(message.chat.id, 'Менеджер получил заявку на тест-драйв, в ближайшее время с вами свяжуться. Спасибо!', reply_markup=markup)
+                    break
+            else:
+                pass
+    await state.finish()
+    print(data)
 
 
-def register_hendlers(dp : Dispatcher):
+def register_handlers(dp: Dispatcher):
+    """*****************************testdrive************************************"""
+    dp.register_callback_query_handler(testdrive, text='button1')
+    dp.register_callback_query_handler(name_1, state=Fsm_test.car)
+    dp.register_message_handler(phone_1, state=Fsm_test.name)
+    dp.register_message_handler(all_info, state=Fsm_test.phone)
+
     """**************************ADMIN**********************************"""
+
     dp.register_callback_query_handler(upload_csv,text='upload')
     dp.register_message_handler(admin, commands=['admin'])
     dp.register_callback_query_handler(mess_all, text='from_base')
