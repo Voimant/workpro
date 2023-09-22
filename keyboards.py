@@ -63,7 +63,7 @@ markup6.add(reviews_kb_3)
 """**********************ТЕСТДРАЙВЫ****************************"""
 
 def test_markup():
-    testdrive_markup = InlineKeyboardMarkup()
+    testdrive_markup = InlineKeyboardMarkup(row_width=1)
     cars = car_for_testdrive()
     for car_dicts in cars:
         for key, value in car_dicts.items():

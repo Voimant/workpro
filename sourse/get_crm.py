@@ -64,5 +64,5 @@ def create_lead(first_name, phone, brand_id, model_id):
         'model_id': int(model_id)
     }
     response = requests.post(base_url, headers={'Authorization': f'Bearer {login}'}, json=json_body)
-    print(response.json())
+    # print(response.json())
     return response.json()
