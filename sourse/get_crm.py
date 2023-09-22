@@ -16,8 +16,8 @@ from pprint import pprint
 
 
 def car_for_testdrive():
-    BASE_URL7 = 'https://demo5.autocrm.ru/yii/api/warehouseVehicle'
-    login = 'tx7bGz3qmvafFMCdilBAKqsc6zzYFeo0'
+    BASE_URL7 = 'https://echoauto.autocrm.ru/yii/api/warehouseVehicle'
+    login = '3goq7PuUrZdiNttGebNlISJh7jRuOKMK'
     response = requests.get(BASE_URL7, headers={'Authorization': f'Bearer {login}'}, params={"isForTestDrive": 1})
     x = response.json()
     keyboard = []
@@ -36,10 +36,10 @@ pprint(car_for_testdrive())
 
 
 def create_work_list(brand_id, model_id):
-    base_url = 'https://demo5.autocrm.ru/yii/api/retailCase'
-    login = 'tx7bGz3qmvafFMCdilBAKqsc6zzYFeo0'
+    base_url = 'https://echoauto.autocrm.ru/yii/api/retailCase'
+    login = '3goq7PuUrZdiNttGebNlISJh7jRuOKMK'
     file_2 = {
-        'salonId': 33,
+        'salonId': 9,
         'primaryContactType': 11,
         'assigneedId': 0,
         'brandId': int(brand_id),
@@ -50,18 +50,19 @@ def create_work_list(brand_id, model_id):
 
 
 def create_lead(first_name, phone, brand_id, model_id):
-    login = 'tx7bGz3qmvafFMCdilBAKqsc6zzYFeo0'
-    base_url = 'https://demo5.autocrm.ru/yii/api/leads/request'
+    login = '3goq7PuUrZdiNttGebNlISJh7jRuOKMK'
+    base_url = 'https://echoauto.autocrm.ru/yii/api/leads/request'
     json_body = {
-        'salon_id': 33,
+        'salon_id': 9,
         'type': 11,
-        'request_type_id': '26',
+        'request_type_id': '1',
         'client_type': 'individual',
         'first_name': first_name,
         'phone': phone,
-        'source_id': '179',
+        'source_id': '22',
         'brand_id': int(brand_id),
         'model_id': int(model_id)
     }
     response = requests.post(base_url, headers={'Authorization': f'Bearer {login}'}, json=json_body)
+    print(response.json())
     return response.json()

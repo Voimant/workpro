@@ -35,7 +35,6 @@ async def cmd_start(message: types.Message):
     logo = 'media\\images\\main_theme.jpg'
     with open(logo, 'rb') as f:
         await bot.send_photo(message.chat.id, f, start_t,  reply_markup=markup)
-    print(message.chat.id)
 
 
 
@@ -55,8 +54,6 @@ async def in_url(message: types.Message):
 #Функция мой id
 #@dp.callback_query_handler(text='user_id')
 async def user_id_inline_callback(call):
-    print(call.from_user.id)
-    print(call)
     await bot.delete_message(call.from_user.id, call.message.message_id)
     await bot.send_message(call.from_user.id, f"Ваш ID: {call.from_user.id}", reply_markup=markup)
 
@@ -101,7 +98,6 @@ async def vin(message: types.Message, state: FSMContext):
     except TypeError:
         await bot.send_message(message.chat.id, 'Извините ничего не нашлось😔, Нужно проверить правильность номера телефона или автомобиля', reply_markup=markup)
 
-    print(data)
 
     await state.finish()
 
@@ -158,7 +154,6 @@ async def sends_all(callback: types.CallbackQuery, state:FSMContext):
     if callback.data == 'send':
         data = await state.get_data(state)
         for user_ids in list_id():
-            print(f'{data["image_al"]} и {data["message_all"]}')
             await bot.send_photo(user_ids, photo=data['image_al'], caption=data['message_all'])
             # await bot.send_message(user_ids, data['message_all'])
         await state.finish()
@@ -177,11 +172,14 @@ async def testdrive(call):
     await Fsm_test.car.set()
 
 async def name_1(callback: types.CallbackQuery, state:FSMContext):
-    print(callback.data)
-    await bot.send_message(callback.from_user.id, callback.data)
-    await state.update_data(car=callback.data)
-    await bot.send_message(callback.from_user.id, 'Введите ваше имя')
-    await Fsm_test.name.set()
+    if callback.data == 'main_menu':
+        await state.finish()
+        await bot.send_message(callback.from_user.id, 'Вы вернулись в главное меню', reply_markup=markup)
+    else:
+        await bot.send_message(callback.from_user.id, callback.data)
+        await state.update_data(car=callback.data)
+        await bot.send_message(callback.from_user.id, 'Введите ваше имя')
+        await Fsm_test.name.set()
 
 async def phone_1(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
@@ -205,7 +203,6 @@ async def all_info(message: types.Message, state: FSMContext):
             else:
                 pass
     await state.finish()
-    print(data)
 
 
 def register_handlers(dp: Dispatcher):
